@@ -2,7 +2,6 @@ package main;
 
 import common.Constants;
 import fileio.*;
-import org.json.simple.JSONArray;
 
 import java.util.ArrayList;
 
@@ -49,6 +48,7 @@ class CommandParser
     }
 
     public String parseCommand(ActionInputData currentCommand){
+        String serialNewName;
         if (currentCommand.getType().equals(Constants.FAVORITE)) {
             // check if it exists in history
             // check if it exists in favMovies
@@ -83,6 +83,46 @@ class CommandParser
                     else{
                         user.getHistory().put(currentCommand.getTitle(), 1);
                         return Constants.SUCCESS + currentCommand.getTitle() + Constants.SUCCESS_VIEW + user.getHistory().get(currentCommand.getTitle());
+                    }
+                }
+            }
+        }
+        if (currentCommand.getType().equals(Constants.RATING)){
+            for(User user : users) {
+                if (user.getUsername().equals(currentCommand.getUsername())){
+                    if (currentCommand.getSeasonNumber() == 0) {
+                        if (user.getShowRatings().containsKey(currentCommand.getTitle())) {
+                            // already rated
+                            return Constants.ERR + currentCommand.getTitle() + Constants.ERR_RATING_DUPLICATE;
+                        } else {
+                            if (user.getHistory().containsKey(currentCommand.getTitle())) {
+                                // good
+                                user.getShowRatings().put(currentCommand.getTitle(), currentCommand.getGrade());
+                                return Constants.SUCCESS + currentCommand.getTitle() + Constants.SUCCESS_RATING_1 + currentCommand.getGrade() + Constants.BY + currentCommand.getUsername();
+                                // " was rated with 6.0 by insecureEagle8";
+                            } else {
+                                // not viewed
+                                return Constants.ERR + currentCommand.getTitle() + Constants.ERR_RATING_NOT_SEEN;
+                            }
+                        }
+                    }
+                    else{
+                        // serial
+                        serialNewName = currentCommand.getTitle() + Constants.SERIAL_IDENTIFIER + currentCommand.getSeasonNumber();
+                        if (user.getShowRatings().containsKey(serialNewName)) {
+                            // already rated
+                            return Constants.ERR + currentCommand.getTitle() + Constants.ERR_RATING_DUPLICATE;
+                        } else {
+                            if (user.getHistory().containsKey(currentCommand.getTitle())) {
+                                // good
+                                user.getShowRatings().put(serialNewName, currentCommand.getGrade());
+                                return Constants.SUCCESS + currentCommand.getTitle() + Constants.SUCCESS_RATING_1 + currentCommand.getGrade() + Constants.BY + currentCommand.getUsername();
+                                // " was rated with 6.0 by insecureEagle8";
+                            } else {
+                                // not viewed
+                                return Constants.ERR + currentCommand.getTitle() + Constants.ERR_RATING_NOT_SEEN;
+                            }
+                        }
                     }
                 }
             }

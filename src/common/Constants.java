@@ -83,4 +83,10 @@ public final class Constants {
     public static final String ERR_FAV_NOT_SEEN = " is not seen";
     public static final String VIEW = "view";
     public static final String SUCCESS_VIEW = " was viewed with total views of ";
+    public static final String RATING = "rating";
+    public static final String SUCCESS_RATING_1 = " was rated with ";
+    public static final String BY = " by ";
+    public static final String ERR_RATING_DUPLICATE = " has been already rated";
+    public static final String ERR_RATING_NOT_SEEN = " in not seen";
+    public static final String SERIAL_IDENTIFIER = "_@_";
 }

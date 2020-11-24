@@ -1,6 +1,7 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class User {
@@ -20,6 +21,7 @@ public class User {
      * Movies added to favorites
      */
     private ArrayList<String> favoriteMovies;
+    private HashMap<String, Double> showRatings;
 
     public User(final String username, final String subscriptionType,
                          final Map<String, Integer> history,
@@ -28,6 +30,7 @@ public class User {
         this.subscriptionType = subscriptionType;
         this.favoriteMovies = favoriteMovies;
         this.history = history;
+        this.showRatings = new HashMap<String, Double>();
     }
 
     public String getUsername() {
@@ -44,6 +47,10 @@ public class User {
 
     public ArrayList<String> getFavoriteMovies() {
         return favoriteMovies;
+    }
+
+    public HashMap<String, Double> getShowRatings() {
+        return showRatings;
     }
 
     @Override
