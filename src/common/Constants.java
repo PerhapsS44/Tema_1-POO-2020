@@ -87,6 +87,11 @@ public final class Constants {
     public static final String SUCCESS_RATING_1 = " was rated with ";
     public static final String BY = " by ";
     public static final String ERR_RATING_DUPLICATE = " has been already rated";
-    public static final String ERR_RATING_NOT_SEEN = " in not seen";
+    public static final String ERR_RATING_NOT_SEEN = " is not seen";
     public static final String SERIAL_IDENTIFIER = "_@_";
+    public static final String QUERY_RES = "Query result: ";
+    public static final String ASC = "asc";
+    public static final String DESC = "desc";
+    public static final String MOST_VIEWED = "most_viewed";
+    public static final String LONGEST = "longest";
 }

@@ -82,9 +82,14 @@ public final class Main {
                 output = CommandParser.getInstance().parseCommand(currentCommand);
                 arrayResult.add(fileWriter.writeFile(currentCommand.getActionId(),null, output));
             }
+            if (currentCommand.getActionType().equals(Constants.QUERY)){
+                output = CommandParser.getInstance().parseQuery(currentCommand);
+                arrayResult.add(fileWriter.writeFile(currentCommand.getActionId(),null, output));
+//                System.out.println(output);
+            }
         }
 
-        CommandParser.getInstance();
+        CommandParser.resetSingleton();
 
 
         fileWriter.closeJSON(arrayResult);
