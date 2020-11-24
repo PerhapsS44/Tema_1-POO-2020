@@ -205,6 +205,24 @@ class CommandParser
         return comp;
     }
 
+    public static Comparator<Movie> sortRatingAsc()
+    {
+        Comparator comp = new Comparator<Movie>(){
+            @Override
+            public int compare(Movie m1, Movie m2)
+            {
+                int crit1 = m1.getTitle().compareTo(m2.getTitle());
+                int crit2;
+                double rating1 = CommandParser.getInstance().movieNoRatings.get(m1.getTitle())/CommandParser.getInstance().movieSumRating.get(m1.getTitle());
+                double rating2 = CommandParser.getInstance().movieNoRatings.get(m1.getTitle())/CommandParser.getInstance().movieSumRating.get(m1.getTitle());
+                crit2 = (int)(rating1 - rating2);
+                if (crit2 != 0) return crit2;
+                return crit1;
+            }
+        };
+        return comp;
+    }
+
     public String parseQuery(ActionInputData currentCommand) {
         String output;
         if (currentCommand.getObjectType().equals(Constants.USERS)){
@@ -231,7 +249,7 @@ class CommandParser
                 j++;
             }
         }
-        System.out.println(usernames);
+//        System.out.println(usernames);
         return usernames;
     }
 
@@ -241,6 +259,8 @@ class CommandParser
         for (Movie movie : movies){
             movieViews.put(movie.getTitle(), 0);
             movieFavs.put(movie.getTitle(), 0);
+            movieNoRatings.put(movie.getTitle(), 0.0);
+            movieSumRating.put(movie.getTitle(), 0.0);
         }
         // filter the movies
         sortedMovies.removeIf((v) -> {
@@ -251,7 +271,10 @@ class CommandParser
             return false;
         });
         // create the hashmap with <movie, totalNoViews> pairs
+//        System.out.println(users);
         for (User user : users){
+//            System.out.println(user);
+//            System.out.println(user.getShowRatings());
             for (Map.Entry<String,Integer> entry : user.getHistory().entrySet()){
                 if (movieViews.containsKey(entry.getKey()))
                     movieViews.put(entry.getKey(), movieViews.get(entry.getKey()) + entry.getValue());
@@ -263,6 +286,19 @@ class CommandParser
                     movieFavs.put(movie, movieViews.get(movie) + 1);
                 else
                     movieFavs.put(movie, 1);
+            }
+            for (HashMap.Entry<String,Double> entry : user.getShowRatings().entrySet()){
+                if (entry.getKey() != null) {
+                    if (movieSumRating.containsKey(entry.getKey())) {
+//                    System.out.println(entry.getKey());
+//                    System.out.println();
+                        movieSumRating.put(entry.getKey(), movieSumRating.get(entry.getKey()) + entry.getValue());
+                        movieNoRatings.put(entry.getKey(), movieNoRatings.get(entry.getKey()) + 1);
+                    } else {
+                        movieSumRating.put(entry.getKey(), entry.getValue());
+                        movieNoRatings.put(entry.getKey(), 1.0);
+                    }
+                }
             }
         }
 
@@ -282,8 +318,8 @@ class CommandParser
 
         if (criteria.equals(Constants.LONGEST)){
             sortedMovies.sort(CommandParser.sortLongestAsc());
-            System.out.println(sortedMovies);
-            System.out.println();
+//            System.out.println(sortedMovies);
+//            System.out.println();
             if (type.equals(Constants.DESC))
                 Collections.reverse(sortedMovies);
 
@@ -295,14 +331,29 @@ class CommandParser
 
         if (criteria.equals(Constants.FAVORITE)){
             sortedMovies.sort(CommandParser.sortFavoriteAsc());
-            System.out.println(sortedMovies);
-            System.out.println();
+//            System.out.println(sortedMovies);
+//            System.out.println();
             if (type.equals(Constants.DESC))
                 Collections.reverse(sortedMovies);
 
             for (int i=0, j=0; i < sortedMovies.size() && j < N; i++){
                 movieTitles.add(sortedMovies.get(i).getTitle());
                 j++;
+            }
+        }
+
+        if (criteria.equals(Constants.RATING)){
+            sortedMovies.sort(CommandParser.sortRatingAsc());
+//            System.out.println(sortedMovies);
+//            System.out.println();
+            if (type.equals(Constants.DESC))
+                Collections.reverse(sortedMovies);
+
+            for (int i=0, j=0; i < sortedMovies.size() && j < N; i++){
+                if (movieNoRatings.get(sortedMovies.get(i).getTitle()) != 0) {
+                    movieTitles.add(sortedMovies.get(i).getTitle());
+                    j++;
+                }
             }
         }
 
