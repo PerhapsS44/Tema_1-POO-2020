@@ -81,7 +81,6 @@ public final class Main {
             if (currentCommand.getActionType().equals(Constants.COMMAND)){
                 output = CommandParser.getInstance().parseCommand(currentCommand);
                 arrayResult.add(fileWriter.writeFile(currentCommand.getActionId(),null, output));
-                // sout
             }
         }
 
