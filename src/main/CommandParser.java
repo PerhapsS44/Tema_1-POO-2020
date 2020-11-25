@@ -365,9 +365,12 @@ class CommandParser
         initDB();
         // filter sortedMovies
         sortedMovies.removeIf((v) -> {
-            if (!Integer.toString(v.getYear()).equals(filters.get(0).get(0)))
-                return true;
-            return !v.getGenres().contains(filters.get(1).get(0));
+            if (filters.get(0).get(0) != null)
+                if (!Integer.toString(v.getYear()).equals(filters.get(0).get(0)))
+                    return true;
+            if (filters.get(1).get(0) != null)
+                return !v.getGenres().contains(filters.get(1).get(0));
+            return false;
         });
 
         if (criteria.equals(Constants.MOST_VIEWED)){
@@ -419,7 +422,7 @@ class CommandParser
             }
         }
 
-        System.out.println(movieTitles);
+//        System.out.println(movieTitles);
         return movieTitles;
     }
 
@@ -432,9 +435,12 @@ class CommandParser
 
         // filter the movies
         sortedShows.removeIf((v) -> {
-            if (!Integer.toString(v.getYear()).equals(filters.get(0).get(0)))
-                return true;
-            return !v.getGenres().contains(filters.get(1).get(0));
+            if (filters.get(0).get(0) != null)
+                if (!Integer.toString(v.getYear()).equals(filters.get(0).get(0)))
+                    return true;
+            if (filters.get(1).get(0) != null)
+                return !v.getGenres().contains(filters.get(1).get(0));
+            return false;
         });
 
         if (criteria.equals(Constants.MOST_VIEWED)){
@@ -462,8 +468,10 @@ class CommandParser
             }
         }
 
-        if (criteria.equals(Constants.FAVORITE)){
+        if (criteria.equals(Constants.FAVORITE)){ // TODO: aici am eroare
             System.out.println(sortedShows);
+            System.out.println();
+            System.out.println(movieFavs);
             sortedShows.sort(CommandParser.sortFavoriteAsc());
             if (sortType.equals(Constants.DESC))
                 Collections.reverse(sortedShows);
@@ -488,7 +496,7 @@ class CommandParser
                 }
             }
         }
-        System.out.println(showTitles);
+//        System.out.println(showTitles);
 
         return showTitles;
     }
@@ -512,8 +520,8 @@ class CommandParser
 //            System.out.println(sortedActors);
             for (int i=0, j=0;i<sortedActors.size() && j < number;i++){
                 if (sortedActors.get(i).getAverageScore() != 0) {
-                    System.out.println(sortedActors.get(i).getName());
-                    System.out.println(sortedActors.get(i).getAverageScore());
+//                    System.out.println(sortedActors.get(i).getName());
+//                    System.out.println(sortedActors.get(i).getAverageScore());
                     actorNames.add(sortedActors.get(i).getName());
                     j++;
                 }
