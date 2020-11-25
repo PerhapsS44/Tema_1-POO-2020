@@ -20,6 +20,11 @@ public class Movie extends Show {
     }
 
     @Override
+    public int getTotalDuration(){
+        return duration;
+    }
+
+    @Override
     public String toString() {
         return "MovieInputData{" + "title= "
                 + super.getTitle() + "year= "

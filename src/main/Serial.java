@@ -31,6 +31,14 @@ public class Serial extends Show {
         return seasons;
     }
 
+    public int getTotalDuration(){
+        int duration = 0;
+        for (Season s : seasons){
+            duration += s.getDuration();
+        }
+        return duration;
+    }
+
     @Override
     public String toString() {
         return "SerialInputData{" + " title= "

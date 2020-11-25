@@ -43,4 +43,8 @@ public class Show {
     public final ArrayList<String> getGenres() {
         return genres;
     }
+
+    public int getTotalDuration() {
+        return 0;
+    }
 }
