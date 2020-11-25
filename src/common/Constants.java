@@ -94,4 +94,5 @@ public final class Constants {
     public static final String DESC = "desc";
     public static final String MOST_VIEWED = "most_viewed";
     public static final String LONGEST = "longest";
+    public static final String AVERAGE = "average";
 }
