@@ -28,6 +28,7 @@ public final class Main {
 
     /**
      * Call the main checker and the coding style checker
+     *
      * @param args from command line
      * @throws IOException in case of exceptions to reading / writing
      */
@@ -74,17 +75,22 @@ public final class Main {
         String output = "";
         //TODO add here the entry point to your implementation
         CommandParser.getInstance().initInstances(input);
-
+//        CommandParser.getInstance().initDB();
 
 //        inputLoader.readActions()
-        for (ActionInputData currentCommand : input.getCommands()){
-            if (currentCommand.getActionType().equals(Constants.COMMAND)){
+        for (ActionInputData currentCommand : input.getCommands()) {
+            if (currentCommand.getActionType().equals(Constants.COMMAND)) {
                 output = CommandParser.getInstance().parseCommand(currentCommand);
-                arrayResult.add(fileWriter.writeFile(currentCommand.getActionId(),null, output));
+                arrayResult.add(fileWriter.writeFile(currentCommand.getActionId(), null, output));
             }
-            if (currentCommand.getActionType().equals(Constants.QUERY)){
+            if (currentCommand.getActionType().equals(Constants.QUERY)) {
                 output = CommandParser.getInstance().parseQuery(currentCommand);
-                arrayResult.add(fileWriter.writeFile(currentCommand.getActionId(),null, output));
+                arrayResult.add(fileWriter.writeFile(currentCommand.getActionId(), null, output));
+//                System.out.println(output);
+            }
+            if (currentCommand.getActionType().equals(Constants.RECOMMENDATION)) {
+                output = CommandParser.getInstance().parseRecomandation(currentCommand);
+                arrayResult.add(fileWriter.writeFile(currentCommand.getActionId(), null, output));
 //                System.out.println(output);
             }
         }

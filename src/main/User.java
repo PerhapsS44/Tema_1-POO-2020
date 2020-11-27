@@ -24,8 +24,8 @@ public class User {
     private HashMap<String, Double> showRatings;
 
     public User(final String username, final String subscriptionType,
-                         final Map<String, Integer> history,
-                         final ArrayList<String> favoriteMovies) {
+                final Map<String, Integer> history,
+                final ArrayList<String> favoriteMovies) {
         this.username = username;
         this.subscriptionType = subscriptionType;
         this.favoriteMovies = favoriteMovies;

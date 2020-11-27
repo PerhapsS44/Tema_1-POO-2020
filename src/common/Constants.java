@@ -2,10 +2,12 @@ package common;
 
 /**
  * The class contains the minimum of constants needed.
- *
+ * <p>
  * You can define your own constants here or create separate files.
  */
 public final class Constants {
+
+
     private Constants() {
     }
 
@@ -95,4 +97,16 @@ public final class Constants {
     public static final String MOST_VIEWED = "most_viewed";
     public static final String LONGEST = "longest";
     public static final String AVERAGE = "average";
+    public static final String STANDARD = "standard";
+    public static final String OUT_STANDARD = "Standard";
+    public static final String OUT_RECOMANDATION = "Recommendation result: ";
+    public static final String BEST_UNSEEN = "best_unseen";
+    public static final String OUT_BEST_UNSEEN = "BestRatedUnseen";
+    public static final String OUT_POPULAR = "Popular";
+    public static final String OUT_FAVORITE = "Favorite";
+    public static final String OUT_SEARCH = "Search";
+    public static final String ERR_RECOMMENDATION = "Recommendation cannot be applied!";
+    public static final String POPULAR = "popular";
+    public static final String SEARCH = "search";
+    public static final String PREMIUM = "PREMIUM";
 }

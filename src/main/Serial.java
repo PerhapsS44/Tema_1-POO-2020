@@ -15,9 +15,9 @@ public class Serial extends Show {
     private ArrayList<Season> seasons;
 
     public Serial(final String title, final ArrayList<String> cast,
-                           final ArrayList<String> genres,
-                           final int numberOfSeasons, final ArrayList<Season> seasons,
-                           final int year) {
+                  final ArrayList<String> genres,
+                  final int numberOfSeasons, final ArrayList<Season> seasons,
+                  final int year) {
         super(title, year, cast, genres);
         this.numberOfSeasons = numberOfSeasons;
         this.seasons = seasons;
@@ -31,9 +31,9 @@ public class Serial extends Show {
         return seasons;
     }
 
-    public int getTotalDuration(){
+    public int getTotalDuration() {
         int duration = 0;
-        for (Season s : seasons){
+        for (Season s : seasons) {
             duration += s.getDuration();
         }
         return duration;

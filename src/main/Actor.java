@@ -32,8 +32,8 @@ public final class Actor {
     private double averageScore = 0;
 
     public Actor(final String name, final String careerDescription,
-                          final ArrayList<String> filmography,
-                          final Map<ActorsAwards, Integer> awards) {
+                 final ArrayList<String> filmography,
+                 final Map<ActorsAwards, Integer> awards) {
         this.name = name;
         this.careerDescription = careerDescription;
         this.filmography = filmography;
@@ -64,15 +64,15 @@ public final class Actor {
         return careerDescription;
     }
 
-    public double getAverageScore(){
+    public double getAverageScore() {
         return averageScore;
     }
 
-    public void setAverageScore(HashMap<String,Double> movieRatings){
+    public void setAverageScore(HashMap<String, Double> movieRatings) {
         double noRatings = 0.0;
-        for (String showTitle : filmography){
-            if (movieRatings.containsKey(showTitle)){
-                if (movieRatings.get(showTitle) != 0){
+        for (String showTitle : filmography) {
+            if (movieRatings.containsKey(showTitle)) {
+                if (movieRatings.get(showTitle) != 0) {
                     noRatings++;
                     averageScore += movieRatings.get(showTitle);
                 }
