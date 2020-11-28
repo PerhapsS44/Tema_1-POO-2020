@@ -8,11 +8,11 @@ public class Serial extends Show {
     /**
      * Number of seasons
      */
-    private int numberOfSeasons;
+    private final int numberOfSeasons;
     /**
      * Season list
      */
-    private ArrayList<Season> seasons;
+    private final ArrayList<Season> seasons;
 
     public Serial(final String title, final ArrayList<String> cast,
                   final ArrayList<String> genres,

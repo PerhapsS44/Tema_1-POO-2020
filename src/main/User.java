@@ -8,20 +8,20 @@ public class User {
     /**
      * User's username
      */
-    private String username;
+    private final String username;
     /**
      * Subscription Type
      */
-    private String subscriptionType;
+    private final String subscriptionType;
     /**
      * The history of the movies seen
      */
-    private Map<String, Integer> history;
+    private final Map<String, Integer> history;
     /**
      * Movies added to favorites
      */
-    private ArrayList<String> favoriteMovies;
-    private HashMap<String, Double> showRatings;
+    private final ArrayList<String> favoriteMovies;
+    private final HashMap<String, Double> showRatings;
 
     public User(final String username, final String subscriptionType,
                 final Map<String, Integer> history,
@@ -30,7 +30,7 @@ public class User {
         this.subscriptionType = subscriptionType;
         this.favoriteMovies = favoriteMovies;
         this.history = history;
-        this.showRatings = new HashMap<String, Double>();
+        this.showRatings = new HashMap<>();
     }
 
     public String getUsername() {

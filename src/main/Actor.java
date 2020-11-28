@@ -27,7 +27,7 @@ public final class Actor {
     /**
      * awards won by the actor
      */
-    private Map<ActorsAwards, Integer> awards;
+    private final Map<ActorsAwards, Integer> awards;
 
     private double averageScore = 0;
 
@@ -64,12 +64,17 @@ public final class Actor {
         return careerDescription;
     }
 
+    public void setCareerDescription(final String careerDescription) {
+        this.careerDescription = careerDescription;
+    }
+
     public double getAverageScore() {
         return averageScore;
     }
 
     public void setAverageScore(HashMap<String, Double> movieRatings) {
         double noRatings = 0.0;
+        averageScore = 0;
         for (String showTitle : filmography) {
             if (movieRatings.containsKey(showTitle)) {
                 if (movieRatings.get(showTitle) != 0) {
@@ -78,23 +83,28 @@ public final class Actor {
                 }
             }
         }
-        System.out.println("   => " + name);
-        System.out.println("   => " + averageScore + "   " + noRatings);
-        System.out.println();
+//        System.out.println("   => " + name);
+//        System.out.println("   => " + averageScore + "   " + noRatings);
+//        System.out.println();
         if (noRatings != 0)
             averageScore /= noRatings;
     }
 
-    public void setCareerDescription(final String careerDescription) {
-        this.careerDescription = careerDescription;
-    }
-
     @Override
     public String toString() {
-        return "ActorInputData{"
-                + "name='" + name + '\''
-                + ", careerDescription='"
-                + careerDescription + '\''
-                + ", filmography=" + filmography + '}';
+        return "\nActorInputData{"
+                + "name='" + name + "'\n";
+//                + "awards=" + awards + "'";
+//                + ", careerDescription='"
+//                + careerDescription + '\'';
+//                + ", filmography=" + filmography + '}';
+    }
+
+    public int getNoAwards() {
+        int noAwards = 0;
+        for (Map.Entry<ActorsAwards, Integer> entry : awards.entrySet()) {
+            noAwards += entry.getValue();
+        }
+        return noAwards;
     }
 }

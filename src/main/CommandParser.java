@@ -1,14 +1,11 @@
 package main;
 
+import actor.ActorsAwards;
 import common.Constants;
 import entertainment.Genre;
-import entertainment.Season;
 import fileio.*;
 
-import java.sql.Array;
 import java.util.*;
-import java.util.List;
-import java.util.concurrent.CompletionService;
 
 class CommandParser {
     // static variable single_instance of type Singleton
@@ -61,6 +58,116 @@ class CommandParser {
         single_instance = new CommandParser();
     }
 
+    public static Comparator<User> sortUsersAsc() {
+        return (Comparator<User>) (s1, s2) -> {
+            int crit1 = s1.getUsername().compareTo(s2.getUsername());
+            int crit2 = s1.getShowRatings().size() - s2.getShowRatings().size();
+            if (crit2 != 0) return crit2;
+            return crit1;
+        };
+    }
+
+    public static Comparator<Show> sortMostViewedAsc() {
+        return (m1, m2) -> {
+            int crit1 = m1.getTitle().compareTo(m2.getTitle());
+            int crit2 = CommandParser.getInstance().movieViews.get(m1.getTitle()) - CommandParser.getInstance().movieViews.get(m2.getTitle());
+            if (crit2 != 0) return crit2;
+            return crit1;
+        };
+    }
+
+    public static Comparator<Show> sortLongestAsc() {
+        return (m1, m2) -> {
+            int crit1 = m1.getTitle().compareTo(m2.getTitle());
+            int crit2 = m1.getTotalDuration() - m2.getTotalDuration();
+            if (crit2 != 0) return crit2;
+            return crit1;
+        };
+    }
+
+    public static Comparator<Show> sortFavoriteAsc() {
+        return (m1, m2) -> {
+            int crit1 = m1.getTitle().compareTo(m2.getTitle());
+            int crit2 = CommandParser.getInstance().movieFavs.get(m1.getTitle()) - CommandParser.getInstance().movieFavs.get(m2.getTitle());
+            if (crit2 != 0) return crit2;
+            return crit1;
+        };
+    }
+
+    public static Comparator<Show> sortFavorite(ArrayList<Show> movieDB) {
+        return (m1, m2) -> {
+            int crit1 = movieDB.indexOf(m1) - movieDB.indexOf(m2);
+            int crit2 = CommandParser.getInstance().movieFavs.get(m2.getTitle()) - CommandParser.getInstance().movieFavs.get(m1.getTitle());
+            if (crit2 != 0) return crit2;
+            return crit1;
+        };
+    }
+
+    public static Comparator<Show> sortRatingAsc() {
+        return (m1, m2) -> {
+            int crit1 = m1.getTitle().compareTo(m2.getTitle());
+            int crit2;
+            double rating1 = CommandParser.getInstance().movieNoRatings.get(m1.getTitle()) / CommandParser.getInstance().movieSumRating.get(m1.getTitle());
+            double rating2 = CommandParser.getInstance().movieNoRatings.get(m1.getTitle()) / CommandParser.getInstance().movieSumRating.get(m1.getTitle());
+            crit2 = (int) (rating1 - rating2);
+            if (crit2 != 0) return crit2;
+            return crit1;
+        };
+    }
+
+    public static Comparator<Actor> sortAverageAsc() {
+        return (a1, a2) -> {
+            int crit1 = a1.getName().compareTo(a2.getName());
+            int crit2 = (int) ((a1.getAverageScore() - a2.getAverageScore()) * 100.0);
+            if (crit2 != 0) return crit2;
+            return crit1;
+        };
+    }
+
+    public static Comparator<Actor> sortAwardsAsc(List<String> list) {
+        return (a1, a2) -> {
+            int critName = a1.getName().compareTo(a2.getName());
+            ArrayList<Integer> crits = new ArrayList<>();
+            crits.add(a1.getNoAwards() - a2.getNoAwards());
+            for (Integer crit : crits) {
+                if (crit != 0) return crit;
+            }
+            return critName;
+        };
+    }
+
+    public static Comparator<Actor> sortFilterDescAsc() {
+        return Comparator.comparing(Actor::getName);
+    }
+
+    public static Comparator<Show> sortBestUnseen(ArrayList<Show> movieDB) {
+        return (m1, m2) -> {
+            int crit1 = movieDB.indexOf(m1) - movieDB.indexOf(m2);
+            int crit2;
+            double rating1 = CommandParser.getInstance().movieRatings.get(m1.getTitle());
+            double rating2 = CommandParser.getInstance().movieRatings.get(m2.getTitle());
+            crit2 = (int) ((rating1 - rating2) * 100);
+            if (crit2 != 0) return -crit2;
+            return crit1;
+        };
+    }
+
+    public static Comparator<Show> sortPopular(ArrayList<Show> movieDB, HashMap<String, Integer> hashMap) {
+        return (m1, m2) -> {
+            int crit1 = movieDB.indexOf(m1) - movieDB.indexOf(m2);
+            int crit2;
+            double rating1 = CommandParser.getInstance().movieNoRatings.get(m1.getTitle()) / CommandParser.getInstance().movieSumRating.get(m1.getTitle());
+            double rating2 = CommandParser.getInstance().movieNoRatings.get(m1.getTitle()) / CommandParser.getInstance().movieSumRating.get(m1.getTitle());
+            crit2 = (int) (rating1 - rating2);
+            if (crit2 != 0) return crit2;
+            return crit1;
+        };
+    }
+
+    public static Comparator<String> sortGenres(HashMap<String, Integer> hashMap) {
+        return Comparator.comparingInt(hashMap::get);
+    }
+
     public void initInstances(Input input) {
         for (UserInputData userInputData : input.getUsers()) {
             users.add(new User(userInputData.getUsername(), userInputData.getSubscriptionType(), userInputData.getHistory(), userInputData.getFavoriteMovies()));
@@ -94,12 +201,14 @@ class CommandParser {
             movieFavs.put(movie.getTitle(), 0);
             movieNoRatings.put(movie.getTitle(), 0.0);
             movieSumRating.put(movie.getTitle(), 0.0);
+            movieRatings.put(movie.getTitle(), 0.0);
         }
         for (Serial serial : serials) {
             movieViews.put(serial.getTitle(), 0);
             movieFavs.put(serial.getTitle(), 0);
             movieNoRatings.put(serial.getTitle(), 0.0);
             movieSumRating.put(serial.getTitle(), 0.0);
+            movieRatings.put(serial.getTitle(), 0.0);
             for (int i = 1; i <= serial.getNumberSeason(); i++) {
                 movieNoRatings.put(serial.getTitle() + Constants.SERIAL_IDENTIFIER + i, 0.0);
                 movieSumRating.put(serial.getTitle() + Constants.SERIAL_IDENTIFIER + i, 0.0);
@@ -154,6 +263,7 @@ class CommandParser {
                         if (movieSumRating.containsKey(serial.getTitle() + Constants.SERIAL_IDENTIFIER + i)) {
                             if (movieSumRating.get(serial.getTitle() + Constants.SERIAL_IDENTIFIER + i) != 0) {
                                 sumRating += movieSumRating.get(serial.getTitle() + Constants.SERIAL_IDENTIFIER + i);
+                                noRatings++;
                             }
                         }
                     }
@@ -170,24 +280,19 @@ class CommandParser {
         for (Genre genre : Genre.values()) {
             genreMovies.put(genre.toString().replace('_', ' ').replace('-', ' ').replace("& ", ""), new ArrayList<>());
         }
-        System.out.println(genreRating);
         for (Movie movie : movies) {
             for (String genre : movie.getGenres()) {
-//                System.out.println(genre.toUpperCase());
                 genreRating.put(genre.toUpperCase().replace('-', ' ').replace("& ", ""), genreRating.get(genre.toUpperCase().replace('-', ' ').replace("& ", "")) + movieViews.get(movie.getTitle()));
             }
         }
         for (Serial serial : serials) {
             for (String genre : serial.getGenres()) {
-//                System.out.println(genre.toUpperCase().replace('-',' ').replace("& ", ""));
                 genreRating.put(genre.toUpperCase().replace('-', ' ').replace("& ", ""), genreRating.get(genre.toUpperCase().replace('-', ' ').replace("& ", "")) + movieViews.get(serial.getTitle()));
             }
         }
 
         for (Movie movie : movies) {
             for (String genre : movie.getGenres()) {
-//                System.out.println(genre.toUpperCase());
-//                System.out.println(genre.toUpperCase().replace('-',' ').replace(" & ", " "));
                 genreMovies.get(genre.toUpperCase().replace('-', ' ').replace("& ", "")).add(movie);
             }
         }
@@ -197,7 +302,6 @@ class CommandParser {
                 genreMovies.get(genre.toUpperCase().replace('-', ' ').replace("& ", "")).add(serial);
             }
         }
-//        System.out.println(genreMovies);
     }
 
     public String parseCommand(ActionInputData currentCommand) {
@@ -278,91 +382,6 @@ class CommandParser {
         return "0";
     }
 
-    // TODO: daca imi pica teste, sa modific ordinea alfabetica cresc sau desc
-    public static Comparator sortUsersAsc() {
-        return (Comparator<User>) (s1, s2) -> {
-            int crit1 = s1.getUsername().compareTo(s2.getUsername());
-            int crit2 = s1.getShowRatings().size() - s2.getShowRatings().size();
-            if (crit2 != 0) return crit2;
-            return crit1;
-        };
-    }
-
-    public static Comparator<Show> sortMostViewedAsc() {
-        return (m1, m2) -> {
-            int crit1 = m1.getTitle().compareTo(m2.getTitle());
-            int crit2 = CommandParser.getInstance().movieViews.get(m1.getTitle()) - CommandParser.getInstance().movieViews.get(m2.getTitle());
-            if (crit2 != 0) return crit2;
-            return crit1;
-        };
-    }
-
-    public static Comparator<Show> sortLongestAsc() {
-        return (m1, m2) -> {
-            int crit1 = m1.getTitle().compareTo(m2.getTitle());
-            int crit2 = m1.getTotalDuration() - m2.getTotalDuration();
-            if (crit2 != 0) return crit2;
-            return crit1;
-        };
-    }
-
-    public static Comparator<Show> sortFavoriteAsc() {
-        return (m1, m2) -> {
-            int crit1 = m1.getTitle().compareTo(m2.getTitle());
-            int crit2 = CommandParser.getInstance().movieFavs.get(m1.getTitle()) - CommandParser.getInstance().movieFavs.get(m2.getTitle());
-            if (crit2 != 0) return crit2;
-            return crit1;
-        };
-    }
-
-    public static Comparator<Show> sortFavorite(ArrayList<Movie> movieDB) {
-        return (m1, m2) -> {
-            int crit1 = movieDB.indexOf(m1) - movieDB.indexOf(m2);
-            int crit2 = CommandParser.getInstance().movieFavs.get(m2.getTitle()) - CommandParser.getInstance().movieFavs.get(m1.getTitle());
-            if (crit2 != 0) return crit2;
-            return crit1;
-        };
-    }
-
-    public static Comparator<Show> sortRatingAsc() {
-        return (m1, m2) -> {
-            int crit1 = m1.getTitle().compareTo(m2.getTitle());
-            int crit2;
-            double rating1 = CommandParser.getInstance().movieNoRatings.get(m1.getTitle()) / CommandParser.getInstance().movieSumRating.get(m1.getTitle());
-            double rating2 = CommandParser.getInstance().movieNoRatings.get(m1.getTitle()) / CommandParser.getInstance().movieSumRating.get(m1.getTitle());
-            crit2 = (int) (rating1 - rating2);
-            if (crit2 != 0) return crit2;
-            return crit1;
-        };
-    }
-
-    public static Comparator<Actor> sortAverageAsc() {
-        return (a1, a2) -> {
-            int crit1 = a1.getName().compareTo(a2.getName());
-            int crit2 = (int) (a1.getAverageScore() - a2.getAverageScore());
-            if (crit2 != 0) return crit2;
-            return crit1;
-        };
-    }
-
-    public static Comparator<Actor> sortAwardsAsc(List<String> list) {
-        return (a1, a2) -> {
-            int critName = a1.getName().compareTo(a2.getName());
-            ArrayList<Integer> crits = new ArrayList<>();
-            for (String award : list) {
-                crits.add(a1.getAwards().get(award) - a2.getAwards().get(award));
-            }
-            for (Integer crit : crits) {
-                if (crit != 0) return crit;
-            }
-            return critName;
-        };
-    }
-
-    public static Comparator<Actor> sortFilterDescAsc() {
-        return Comparator.comparing(Actor::getName);
-    }
-
     public String parseQuery(ActionInputData currentCommand) {
         String output;
         if (currentCommand.getObjectType().equals(Constants.USERS)) {
@@ -387,36 +406,6 @@ class CommandParser {
         return "";
     }
 
-    public static Comparator<Show> sortBestUnseen(ArrayList<Movie> movieDB) {
-        return (m1, m2) -> {
-            int crit1 = movieDB.indexOf(m1) - movieDB.indexOf(m2);
-            int crit2;
-            double rating1 = CommandParser.getInstance().movieNoRatings.get(m1.getTitle()) / CommandParser.getInstance().movieSumRating.get(m1.getTitle());
-            double rating2 = CommandParser.getInstance().movieNoRatings.get(m1.getTitle()) / CommandParser.getInstance().movieSumRating.get(m1.getTitle());
-            crit2 = (int) (rating1 - rating2);
-            if (crit2 != 0) return crit2;
-            return crit1;
-        };
-    }
-
-    //TODO: hehe
-    public static Comparator<Show> sortPopular(ArrayList<Movie> movieDB, HashMap<String, Integer> hashMap) {
-        return (m1, m2) -> {
-            int crit1 = movieDB.indexOf(m1) - movieDB.indexOf(m2);
-            int crit2;
-            double rating1 = CommandParser.getInstance().movieNoRatings.get(m1.getTitle()) / CommandParser.getInstance().movieSumRating.get(m1.getTitle());
-            double rating2 = CommandParser.getInstance().movieNoRatings.get(m1.getTitle()) / CommandParser.getInstance().movieSumRating.get(m1.getTitle());
-            crit2 = (int) (rating1 - rating2);
-            if (crit2 != 0) return crit2;
-            return crit1;
-        };
-    }
-
-    public static Comparator<String> sortGenres(HashMap<String, Integer> hashMap) {
-        return Comparator.comparingInt(hashMap::get);
-    }
-
-
     public ArrayList<String> users_query(int N, String order) {
         ArrayList<User> sortedUsers = new ArrayList<>(users);
         ArrayList<String> usernames = new ArrayList<>();
@@ -429,7 +418,6 @@ class CommandParser {
                 j++;
             }
         }
-//        System.out.println(usernames);
         return usernames;
     }
 
@@ -474,9 +462,7 @@ class CommandParser {
         }
 
         if (criteria.equals(Constants.FAVORITE)) {
-            System.out.println(sortedMovies);
             sortedMovies.sort(CommandParser.sortFavoriteAsc());
-            System.out.println(sortedMovies);
             if (type.equals(Constants.DESC))
                 Collections.reverse(sortedMovies);
 
@@ -484,11 +470,9 @@ class CommandParser {
                 movieTitles.add(sortedMovies.get(i).getTitle());
                 j++;
             }
-            System.out.println(movieTitles);
-            System.out.println(movieFavs);
         }
 
-        if (criteria.equals(Constants.RATING)) {
+        if (criteria.equals(Constants.RATINGS)) {
             sortedMovies.sort(CommandParser.sortRatingAsc());
             if (type.equals(Constants.DESC))
                 Collections.reverse(sortedMovies);
@@ -500,8 +484,6 @@ class CommandParser {
                 }
             }
         }
-
-//        System.out.println(movieTitles);
         return movieTitles;
     }
 
@@ -559,7 +541,7 @@ class CommandParser {
             }
         }
 
-        if (criteria.equals(Constants.RATING)) {
+        if (criteria.equals(Constants.RATINGS)) {
             sortedShows.sort(CommandParser.sortRatingAsc());
             if (sortType.equals(Constants.DESC))
                 Collections.reverse(sortedShows);
@@ -571,7 +553,6 @@ class CommandParser {
                 }
             }
         }
-//        System.out.println(showTitles);
 
         return showTitles;
     }
@@ -588,15 +569,8 @@ class CommandParser {
             if (sortType.equals(Constants.DESC)) {
                 Collections.reverse(sortedActors);
             }
-
-//            System.out.println(movieNoRatings);
-//            System.out.println(movieSumRating);
-//            System.out.println(movieRatings);
-//            System.out.println(sortedActors);
             for (int i = 0, j = 0; i < sortedActors.size() && j < number; i++) {
                 if (sortedActors.get(i).getAverageScore() != 0) {
-//                    System.out.println(sortedActors.get(i).getName());
-//                    System.out.println(sortedActors.get(i).getAverageScore());
                     actorNames.add(sortedActors.get(i).getName());
                     j++;
                 }
@@ -605,7 +579,7 @@ class CommandParser {
         if (criteria.equals(Constants.AWARDS)) {
             sortedActors.removeIf((a) -> {
                 for (String award : filters.get(3)) {
-                    if (!a.getAwards().containsKey(award)) {
+                    if (!a.getAwards().containsKey(ActorsAwards.valueOf(award))) {
                         return true;
                     }
                 }
@@ -622,8 +596,9 @@ class CommandParser {
         // TODO: aici o sa am probleme la testele mari
         if (criteria.equals(Constants.FILTER_DESCRIPTIONS)) {
             sortedActors.removeIf((a) -> {
-                for (String award : filters.get(2)) {
-                    if (!a.getCareerDescription().toLowerCase().contains(award)) {
+                for (String word : filters.get(2)) {
+
+                    if (!a.getCareerDescription().replace('\n', ' ').toLowerCase().matches(new StringBuilder().append(".*?\\b").append(word).append("\\b.*?").toString())) {
                         return true;
                     }
                 }
@@ -671,7 +646,7 @@ class CommandParser {
                 return Constants.OUT_FAVORITE + Constants.ERR_RECOMMENDATION;
         }
         if (currentCommand.getType().equals(Constants.SEARCH)) {
-            output = searchRecomandation(currentCommand.getUsername());
+            output = searchRecomandation(currentCommand.getUsername(), currentCommand.getGenre());
             if (output != null)
                 return Constants.OUT_SEARCH + Constants.OUT_RECOMANDATION + output;
             else
@@ -681,42 +656,43 @@ class CommandParser {
     }
 
     public String standardRecomandation(String username) {
-        ArrayList<Movie> moviesDB = new ArrayList<>(movies);
+        ArrayList<Show> showDB = new ArrayList<>(movies);
+        showDB.addAll(serials);
         for (User user : users) {
             if (user.getUsername().equals(username)) {
-//                System.out.println(moviesDB);
-                moviesDB.removeIf((movie -> {
+                showDB.removeIf((movie -> {
                     return user.getHistory().containsKey(movie.getTitle());
                 }));
-//                System.out.println(moviesDB);
-                if (moviesDB.size() > 0)
-                    return moviesDB.get(0).getTitle();
+                if (showDB.size() > 0)
+                    return showDB.get(0).getTitle();
             }
         }
         return null;
     }
 
     public String bestUnseenRecomandation(String username) {
-        ArrayList<Movie> moviesDB = new ArrayList<>(movies);
+        ArrayList<Show> showDB = new ArrayList<>(movies);
+        showDB.addAll(serials);
+
+        ArrayList<Show> listOfShows = new ArrayList<>(movies);
+        listOfShows.addAll(serials);
         initDB();
         for (User user : users) {
             if (user.getUsername().equals(username)) {
-//                System.out.println(moviesDB);
-                moviesDB.removeIf((movie -> {
+                showDB.removeIf((movie -> {
                     return user.getHistory().containsKey(movie.getTitle());
                 }));
-//                System.out.println(moviesDB);
-                moviesDB.sort(sortBestUnseen(movies));
-//                System.out.println(moviesDB);
-                if (moviesDB.size() > 0)
-                    return moviesDB.get(0).getTitle();
+                showDB.sort(sortBestUnseen(listOfShows));
+                if (showDB.size() > 0)
+                    return showDB.get(0).getTitle();
             }
         }
         return null;
     }
 
     public String popularRecomandation(String username) {
-        ArrayList<Movie> moviesDB = new ArrayList<>(movies);
+        ArrayList<Show> showDB = new ArrayList<>(movies);
+        showDB.addAll(serials);
         ArrayList<String> genres = new ArrayList<>();
         HashMap<String, ArrayList<Show>> genreShows = new HashMap<>(genreMovies);
         initDB();
@@ -736,7 +712,6 @@ class CommandParser {
                             .replace("& ", ""))
                             .removeIf((s) -> user.getHistory().containsKey(s.getTitle()));
                 }
-                System.out.println(genreShows);
                 genres.sort(sortGenres(genreRating));
                 Collections.reverse(genres);
 
@@ -746,53 +721,61 @@ class CommandParser {
                         return genreShows.get(genre).get(0).getTitle();
                     }
                 }
-
-
-//                moviesDB.removeIf((movie -> {
-//                    return user.getHistory().containsKey(movie.getTitle());
-//                }));
-//                moviesDB.sort(sortPopularRecomandation(genreRating));
-//                System.out.println(moviesDB);
-//                if (moviesDB.size()>0)
-//                    return moviesDB.get(0).getTitle();
             }
         }
         return null;
     }
 
     public String favoriteRecomandation(String username) {
-        ArrayList<Movie> moviesDB = new ArrayList<>(movies);
+        ArrayList<Show> showDB = new ArrayList<>(movies);
+        showDB.addAll(serials);
+        ArrayList<Show> shows = new ArrayList<>(movies);
+        shows.addAll(serials);
         initDB();
-//        movieFavs;
-        for (User user : users){
-            if (user.getUsername().equals(username)){
+        for (User user : users) {
+            if (user.getUsername().equals(username)) {
                 if (!user.getSubscriptionType().equals(Constants.PREMIUM)) {
                     return null;
                 }
-                moviesDB.removeIf((m) -> {
+                showDB.removeIf((m) -> {
                     return user.getHistory().containsKey(m.getTitle());
                 });
-                moviesDB.sort(sortFavorite(movies));
-                if (moviesDB.size() > 0)
-                    return moviesDB.get(0).getTitle();
+                showDB.removeIf((m) -> {
+                    return movieFavs.get(m.getTitle()) == 0;
+                });
+                showDB.sort(sortFavorite(shows));
+                if (showDB.size() > 0)
+                    return showDB.get(0).getTitle();
             }
         }
         return null;
     }
 
-    public String searchRecomandation(String username) {
-        ArrayList<Movie> moviesDB = new ArrayList<>(movies);
-//        for (User user : users){
-//            if (user.getUsername().equals(username)){
-//                System.out.println(moviesDB);
-//                moviesDB.removeIf((movie -> {
-//                    return user.getHistory().containsKey(movie.getTitle());
-//                }));
-//                System.out.println(moviesDB);
-//                if (moviesDB.size()>0)
-//                    return moviesDB.get(0).getTitle();
-//            }
-//        }
+    public String searchRecomandation(String username, String genre) {
+        ArrayList<Show> showDB = new ArrayList<>(movies);
+        ArrayList<String> showsTitles = new ArrayList<>();
+        showDB.addAll(serials);
+        initDB();
+        for (User user : users) {
+            if (user.getUsername().equals(username)) {
+                if (!user.getSubscriptionType().equals(Constants.PREMIUM)) {
+                    return null;
+                }
+                showDB.removeIf((s) -> {
+                    return user.getHistory().containsKey(s.getTitle());
+                });
+                showDB.removeIf((s) -> {
+                    return !s.getGenres().contains(genre);
+                });
+                showDB.sort(sortRatingAsc());
+                if (showDB.size() == 0)
+                    return null;
+                for (Show show : showDB) {
+                    showsTitles.add(show.getTitle());
+                }
+                return showsTitles.toString();
+            }
+        }
         return null;
     }
 

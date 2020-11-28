@@ -1,9 +1,12 @@
 package main;
 
-import checker.Checkstyle;
 import checker.Checker;
+import checker.Checkstyle;
 import common.Constants;
-import fileio.*;
+import fileio.ActionInputData;
+import fileio.Input;
+import fileio.InputLoader;
+import fileio.Writer;
 import org.json.simple.JSONArray;
 
 import java.io.File;
@@ -11,10 +14,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Objects;
-
-import static common.Constants.FAVORITE_MOVIES;
 
 /**
  * The entry point to this homework. It runs the checker that tests your implentation.
@@ -72,12 +72,8 @@ public final class Main {
         Writer fileWriter = new Writer(filePath2);
         JSONArray arrayResult = new JSONArray();
 
-        String output = "";
-        //TODO add here the entry point to your implementation
+        String output;
         CommandParser.getInstance().initInstances(input);
-//        CommandParser.getInstance().initDB();
-
-//        inputLoader.readActions()
         for (ActionInputData currentCommand : input.getCommands()) {
             if (currentCommand.getActionType().equals(Constants.COMMAND)) {
                 output = CommandParser.getInstance().parseCommand(currentCommand);
@@ -86,12 +82,10 @@ public final class Main {
             if (currentCommand.getActionType().equals(Constants.QUERY)) {
                 output = CommandParser.getInstance().parseQuery(currentCommand);
                 arrayResult.add(fileWriter.writeFile(currentCommand.getActionId(), null, output));
-//                System.out.println(output);
             }
             if (currentCommand.getActionType().equals(Constants.RECOMMENDATION)) {
                 output = CommandParser.getInstance().parseRecomandation(currentCommand);
                 arrayResult.add(fileWriter.writeFile(currentCommand.getActionId(), null, output));
-//                System.out.println(output);
             }
         }
 

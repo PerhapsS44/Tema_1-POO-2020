@@ -8,9 +8,6 @@ package common;
 public final class Constants {
 
 
-    private Constants() {
-    }
-
     public static final String DATABASE = "database";
     public static final String ACTORS = "actors";
     public static final String MOVIES = "movies";
@@ -56,7 +53,6 @@ public final class Constants {
     public static final String QUERY = "query";
     public static final String COMMAND = "command";
     public static final String RECOMMENDATION = "recommendation";
-
     // checker constants
     public static final String ID_STRING = "id";
     public static final String LARGE = "large";
@@ -75,7 +71,6 @@ public final class Constants {
     public static final int SINGLE_TEST = 2;
     public static final int LARGE_TEST = 3;
     public static final int MAX_LENGTH = 50;
-
     // add any constants you think you may use
     public static final String FAVORITE = "favorite";
     public static final String ERR = "error -> ";
@@ -109,4 +104,7 @@ public final class Constants {
     public static final String POPULAR = "popular";
     public static final String SEARCH = "search";
     public static final String PREMIUM = "PREMIUM";
+    public static final String RATINGS = "ratings";
+    private Constants() {
+    }
 }

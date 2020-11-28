@@ -6,19 +6,19 @@ public class Show {
     /**
      * Show's title
      */
-    private String title;
+    private final String title;
     /**
      * The year the show was released
      */
-    private int year;
+    private final int year;
     /**
      * Show casting
      */
-    private ArrayList<String> cast;
+    private final ArrayList<String> cast;
     /**
      * Show genres
      */
-    private ArrayList<String> genres;
+    private final ArrayList<String> genres;
 
     public Show(final String title, final int year,
                 final ArrayList<String> cast, final ArrayList<String> genres) {
