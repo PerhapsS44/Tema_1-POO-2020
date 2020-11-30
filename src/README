@@ -1,0 +1,76 @@
+@Copyright Stefan Saraev 322CA 2020
+
+=====================================Tema 1=====================================
+* Disclaimer, arata muult mai bine si e modularizata mai bine decat ma asteptam
+* Sunt fericit ca am scapat de ea, cred ca se putea da si la bac enuntul asta,
+"ce a vrut sa spuna autorul?" :))
+================================================================================
+
+===================================Comenzi======================================
+ * Mi-am facut o metoda care se ocupa de gestionarea comenzilor
+ * Au fost cam pretty straight forward, nu stiu ce as putea spune in plus despre
+ ele fata de enunt.
+
+ * Tot aici am inceput sa scriu la 'initDB', o metoda care se ocupa exclusiv de
+ prelucrarea informatiilor din baza de date. Ca sa rezolv problema unicitatii
+ ei, am ales sa folosesc un singleton pe care il resetez de fiecare data cand
+ se ruleaza metoda 'action', ca sa nu imi foloseasca datele din teste
+ vechi.
+
+ * Am decis ca aceasta prelucrare sa o fac de fiecare data cand apelez un query
+ sau o recomandare, deoarece era mai putin de scris si de gandit decat sa
+ updatez baza de date 'extinsa' la fiecare comanda. Este mai lent, dar merge.
+================================================================================
+
+=================================Queri-uri======================================
+ * Mi-am facut o metoda care se ocupa de gestionarea queri-urilor
+ * Pentru fiecare tip de query am cate o metoda:
+   - pentru acotri
+   - pentru filme
+   - pentru seriale (== shows fmmmm)
+   - pentru utilizatori
+ * Structura query-urilor este aproape identica pentru fiecare tip, asa ca o voi
+ prezenta pe scurt aici:
+   - fac o copie la o lista de date (de users, filme, seriale, actori)
+   - aplic niste filtre pe lista asta (un removeIf cu lambda expression, ca sa
+     fiu fancy, in rand cu lumea)
+   - sortez lista dupa un comparator definit de mine (da, am scris multe,
+     foarte multe)
+   - salvez intr-o lista de Stringuri titlurile showurilor sau numele
+     userilor/actorilor
+   - returnez lista si o afisez dupa formatul vostru
+ * Doar la filter description, la actori, arata a magie neagra ce se intampla
+ acolo, pentru ca trebuie sa aplic regex pe un string si trebuie sa-l filtrez
+ inainte.
+================================================================================
+
+=================================Recomandari====================================
+ * Mi-am facut o metoda care se ocupa de gestionarea recomandarilor
+ * La fel ca la query-uri, structura e aproape aceeasi, magie neagra fiind doar
+ la recomandare popular
+ * Am implementat, pe scurt, recomandarile asa:
+   - imi fac o lista de showuri
+   - o filtrez
+   - o sortez dupa ce mi se cere cu comparatoarele mele blanao
+   - afisez primul element sau toata lista, in functie de ce se cere
+
+ * Popular:
+   - imi fac un hashmap de la un String (genre) la o lista de filme si seriale
+   - imi fac o lista de stringuri (genres) in care salvez numele genurilor
+   - sortez lista dupa nr de vizionari al fiecarui gen
+   - parcurg lista de genuei: pentru fiecare gen parcurg lista de filme:
+     pentru fiecare film verific daca a fost sau nu vizionat, si daca nu il
+     afisez
+
+   - a fost putin dubios sa fac lista de genuri, cand am inceput sa scriu readme
+   m-am gandit la o metoda mai eleganta de a genera lista aia, fara sa mai fac
+   replace-uri dubioase, dar il las asa. Merge? Merge =))
+================================================================================
+  Nu o luati ca pe o insulta, cand cineva din grupa mea scrie sau spune "fmm", e
+ca si cum ar rade sau ar scrie "=))" sau ":))))". Lumea nu insulta, lumea rade
+de propria suferinta. Sadomasochism la el acasa.
+  Oricum, interesanta tema, cam in lipsa explicata, dar aia e, cred ca putea fi
+data ca tema 2, dupa ce invatam si noi un visitor pattern, poate scapam de
+codul duplicat care ne-a acoperit miile de linii de cod
+
+KUTGW!
