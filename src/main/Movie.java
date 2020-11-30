@@ -2,7 +2,7 @@ package main;
 
 import java.util.ArrayList;
 
-public class Movie extends Show {
+public final class Movie extends Show {
     /**
      * Duration in minutes of a season
      */
@@ -24,13 +24,4 @@ public class Movie extends Show {
         return duration;
     }
 
-    @Override
-    public String toString() {
-        return "\nMovieInputData{" + "title= "
-                + super.getTitle() + "year= \n";
-//                + super.getYear() + "duration= "
-//                + duration + "cast {"
-//                + super.getCast() + " }\n"
-//                + "genres {" + super.getGenres() + " }\n ";
-    }
 }

@@ -33,33 +33,24 @@ public class User {
         this.showRatings = new HashMap<>();
     }
 
-    public String getUsername() {
+    public final String getUsername() {
         return username;
     }
 
-    public Map<String, Integer> getHistory() {
+    public final Map<String, Integer> getHistory() {
         return history;
     }
 
-    public String getSubscriptionType() {
+    public final String getSubscriptionType() {
         return subscriptionType;
     }
 
-    public ArrayList<String> getFavoriteMovies() {
+    public final ArrayList<String> getFavoriteMovies() {
         return favoriteMovies;
     }
 
-    public HashMap<String, Double> getShowRatings() {
+    public final HashMap<String, Double> getShowRatings() {
         return showRatings;
-    }
-
-    @Override
-    public String toString() {
-        return "UserInputData{" + "username='"
-                + username + '\'' + ", subscriptionType='"
-                + subscriptionType + '\'' + ", history="
-                + history + ", favoriteMovies="
-                + favoriteMovies + '}';
     }
 
 }

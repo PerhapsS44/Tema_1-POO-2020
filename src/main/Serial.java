@@ -23,30 +23,23 @@ public class Serial extends Show {
         this.seasons = seasons;
     }
 
-    public int getNumberSeason() {
+    public final int getNumberSeason() {
         return numberOfSeasons;
     }
 
-    public ArrayList<Season> getSeasons() {
+    public final ArrayList<Season> getSeasons() {
         return seasons;
     }
 
+    /**
+     * Calculeaza durata totala a unui serial
+     * @return durata
+     */
     public int getTotalDuration() {
         int duration = 0;
         for (Season s : seasons) {
             duration += s.getDuration();
         }
         return duration;
-    }
-
-    @Override
-    public String toString() {
-        return "SerialInputData{" + " title= "
-                + super.getTitle() + " " + " year= "
-                + super.getYear() + " cast {"
-                + super.getCast() + " }\n" + " genres {"
-                + super.getGenres() + " }\n "
-                + " numberSeason= " + numberOfSeasons
-                + ", seasons=" + seasons + "\n\n" + '}';
     }
 }

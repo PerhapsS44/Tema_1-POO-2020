@@ -105,6 +105,9 @@ public final class Constants {
     public static final String SEARCH = "search";
     public static final String PREMIUM = "PREMIUM";
     public static final String RATINGS = "ratings";
+    public static final double ONE_HUNDRED = 100.0;
+    public static final int MAGIC_NUMBER = 3;
+
     private Constants() {
     }
 }

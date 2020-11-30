@@ -44,6 +44,10 @@ public class Show {
         return genres;
     }
 
+    /**
+     * durata maxima a unui show
+     * @return durata
+     */
     public int getTotalDuration() {
         return 0;
     }

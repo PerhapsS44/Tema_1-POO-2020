@@ -13,6 +13,10 @@ import java.util.Map;
  */
 public final class Actor {
     /**
+     * awards won by the actor
+     */
+    private final Map<ActorsAwards, Integer> awards;
+    /**
      * actor name
      */
     private String name;
@@ -24,11 +28,6 @@ public final class Actor {
      * videos starring actor
      */
     private ArrayList<String> filmography;
-    /**
-     * awards won by the actor
-     */
-    private final Map<ActorsAwards, Integer> awards;
-
     private double averageScore = 0;
 
     public Actor(final String name, final String careerDescription,
@@ -72,7 +71,12 @@ public final class Actor {
         return averageScore;
     }
 
-    public void setAverageScore(HashMap<String, Double> movieRatings) {
+    /**
+     * Calculeaza "scorul" unui actor, camp ce va fi folosit ca parametru la sortare
+     * Acesta reprezinta media ratingurilor tuturor filmelor in care a jucat
+     * @param movieRatings
+     */
+    public void setAverageScore(final HashMap<String, Double> movieRatings) {
         double noRatings = 0.0;
         averageScore = 0;
         for (String showTitle : filmography) {
@@ -83,23 +87,15 @@ public final class Actor {
                 }
             }
         }
-//        System.out.println("   => " + name);
-//        System.out.println("   => " + averageScore + "   " + noRatings);
-//        System.out.println();
-        if (noRatings != 0)
+        if (noRatings != 0) {
             averageScore /= noRatings;
+        }
     }
 
-    @Override
-    public String toString() {
-        return "\nActorInputData{"
-                + "name='" + name + "'\n";
-//                + "awards=" + awards + "'";
-//                + ", careerDescription='"
-//                + careerDescription + '\'';
-//                + ", filmography=" + filmography + '}';
-    }
-
+    /**
+     * Calculeaza numarul de premii primite in total
+     * @return numarul de premii primite in total
+     */
     public int getNoAwards() {
         int noAwards = 0;
         for (Map.Entry<ActorsAwards, Integer> entry : awards.entrySet()) {
